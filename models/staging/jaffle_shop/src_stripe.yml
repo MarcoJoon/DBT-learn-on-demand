@@ -1,0 +1,46 @@
+version: 2
+
+sources: 
+  - name: stripe
+    description: A clone clone of a postres application database.
+    database: dbt-tutorial
+    tables: 
+      - name: payment
+        description: Raw payment data.
+        loaded_at_field: _batched_at
+        freshness: 
+          warn_after: {count: 12, period: hour}
+          error_after: {count: 24, period: hour}
+        columns:
+          - name: id
+            description: Primary key of the payment table.
+            tests: 
+              - unique
+              - not_null
+          - name: orderid
+            description: Foreign keu pointing at the order table in Jaffle_shop
+            tests:
+              - not_null
+          - name: paymentmethod
+            description: The method of payment.
+            tests: 
+              - not_null
+          - name: status
+            description: The status of the payment.
+            tests: 
+              - not_null
+          - name: amount
+            description: The amount of the payment.
+            tests:
+              - not_null
+          - name: created
+            description: The created date of the payment.
+            tests:
+              - not_null
+          - name: _batched_at
+            description: The time the payment was loaded into the database
+            tests: 
+              - not_null
+            
+
+## -- id, orderid, paymentmethod, status, amount. created, _batched_at 

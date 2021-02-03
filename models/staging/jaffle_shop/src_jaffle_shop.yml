@@ -1,0 +1,52 @@
+version: 2
+
+sources:
+  - name: jaffle_shop
+    description: A clone of a Postges application database
+    database: dbt-tutorial
+    tables:
+      - name: customers
+        description: Raw customers data. 
+        columns:
+          - name: id
+            description: Primary key for customers
+            tests: 
+              - unique 
+              - not_null
+          - name: first_name
+            description: Fist name of customer.
+            tests:
+              - not_null
+          - name: last_name
+            description: Last name of customer.
+            tests:
+              - not_null
+
+      - name: orders
+        description: Raw orders data.
+        loaded_at_field: _etl_loaded_at
+        freshness: 
+          warn_after: {count: 12, period: hour}
+          error_after: {count: 24, period: hour} 
+        columns:
+          - name: id
+            description: Primary key for orders
+            tests:
+              - unique
+              - not_null
+          - name: user_id
+            description: Foreign key pointing at customer id.
+            tests:
+              - not_null
+          - name: order_date
+            description: Date of the order.
+            tests: 
+              - not_null
+          - name: status
+            description: Status of the order.
+            tests: 
+              - not_null
+          - name: _etl_loaded_at
+            description: Date of when it was loaded into the database
+            test:
+              - not_null
